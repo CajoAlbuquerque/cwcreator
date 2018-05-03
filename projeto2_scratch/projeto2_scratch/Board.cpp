@@ -2,34 +2,46 @@
 
 Board::Board()
 {
-	_lines = 0;
-	_columns = 0;
 }
 
 Board::~Board()
 {
 }
 
-void Board::create(unsigned int lines, unsigned int columns)
+void Board::Open(unsigned int num_lines, unsigned int num_columns)
 {
-	_lines = lines;
-	_columns = columns;
-	cells.resize(lines);
+	lines = num_lines;
+	columns = num_columns;
 
-	for (int i = 0; i < cells.size(); i++)
+	Board_Cells.resize(lines);
+
+	for (int i = 0; i < lines; i++)
 	{
-		cells[i].resize(columns, ".");
+		Board_Cells[i].resize(columns, '.');
 	}
 }
 
-void Board::show()
+void Board::DefineIndexes() //this function exists only to indicate the indexes that surround the board to help the user
 {
-	for (int i = 0; i < cells.size(); i++)
+	indexes[0] = ' '; //the first position of the index is meant to not be seen
+
+	for (size_t i = 1; i <= columns; i++)  // we first write the indexes of the columns (that appear on top of the board)
+		indexes[i] = (char)((int)'a' + i - 1);
+
+	for (size_t i = columns + 1; i <= lines; i++) //then, we add the indexes of the lines (that appear on the left side of the board)
+		indexes[i] = (char)((int)'A' + i - 1);
+}
+
+void Board::ShowBoard() //this function displays the board to the user
+{
+	for (size_t i = 0; i <= columns; i++) //
+		cout << indexes[i] << setw(2);
+
+	for (size_t i = 0; i <= lines; i++)
 	{
-		for (int j = 0; j < cells[i].size(); j++)
-		{
-			cout << cells[i][j];
-		}
-		cout << endl;
+		cout << indexes[i + columns + 1] << setw(2);
+
+		for (size_t k = 0; k < columns; k++)
+			cout << Board_Cells[i][k] << setw(2);
 	}
 }

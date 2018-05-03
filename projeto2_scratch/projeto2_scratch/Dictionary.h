@@ -1,11 +1,13 @@
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
+
 #include <fstream>
 #include <map>
 #include <vector>
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <utility>
 
 using namespace std;
 
@@ -14,14 +16,18 @@ class Dictionary
 public:
 	Dictionary();
 	~Dictionary();
-	void Open();
-	bool validWord();
+	void ExtractWords(ifstream &dictionaryFile);
+	bool WordExists(string word);
 	vector <string> MatchingWords();
 
 private:
-
-	ifstream dictionaryFile;
+	unsigned int counter;
 	map < string, vector <string> > wordList;
+
+	void separateWords(string line, map < string, vector <string> > &wordList, unsigned int &counter);
+	bool validWord(string word);
+	void trimWord(string &word);
+	void EverythingToUpper(string &word);
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -12,12 +13,15 @@ class Board
 public:
 	Board();
 	~Board();
-	void create(unsigned int lines, unsigned int columns);
-	void show();
+	void Open(unsigned int num_lines, unsigned int num_columns);
+	void DefineIndexes();
+	void ShowBoard();
+
 private:
-	int _lines;
-	int _columns;
-	vector < vector < string > > cells;
+	unsigned int lines;
+	unsigned int columns;
+	vector < vector < char > > Board_Cells;
+	vector <char> indexes;
 };
 
 #endif

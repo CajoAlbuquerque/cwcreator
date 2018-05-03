@@ -2,7 +2,65 @@
 #include "Dictionary.h"
 #include "Board.h"
 
-void ProgramInterface(Dictionary &dictionary, Board &board)
+void OpenDictionary(string &FileName, ifstream &dictionaryFile)
+{
+	dictionaryFile.open(FileName); //open the text file (dictionary)
+
+	while (!dictionaryFile.is_open()) //only allowed to move forward when the text file is opened
+	{
+		cerr << FileName << " not found, please verify it and introduce it again." << endl;
+		cin.ignore(10000, '\n');
+		cin >> FileName;
+
+		if (cin.eof())
+			exit(0);
+
+		dictionaryFile.open(FileName);
+	}
+}
+
+void CreatePuzzle()
+{
+	Dictionary dictionary;
+	Board board;
+	string FileName;
+	ifstream dictionaryFile;
+	unsigned int num_lines, num_columns;
+
+
+	//creating the dictionary
+
+	cout << "Dictionary file name ? ";
+	cin >> FileName; //collects the file name of input (dictionary)
+
+	OpenDictionary(FileName, dictionaryFile);
+	dictionary.ExtractWords(dictionaryFile);
+	dictionaryFile.close();
+
+
+	// creating the board 
+
+	cout << "Board size ? (lines columns) ";
+	cin >> num_lines >> num_columns;
+
+	while (!cin.fail()) //if the input for lines and columns failed 
+	{
+		cin.ignore(1000000, '/n');
+		cout << "Introduce a valid input for lines and columns. ";
+		cin >> num_lines >> num_columns;
+	}
+
+	board.Open(num_lines, num_columns);
+	board.DefineIndexes();
+	board.ShowBoard();
+}
+
+void ResumePuzzle()
+{
+
+}
+
+void ProgramInterface()
 {
 	int option;
 
@@ -38,10 +96,10 @@ void ProgramInterface(Dictionary &dictionary, Board &board)
 		{
 		case 0: exit(0);
 		case 1:
-			dictionary.Open();
-			dictionary.show();
+			CreatePuzzle();
 			break;
 		case 2:
+			ResumePuzzle();
 			break;
 		}
 	}
@@ -49,10 +107,7 @@ void ProgramInterface(Dictionary &dictionary, Board &board)
 
 int main()
 {
-	Dictionary dictionary;
-	Board board;
-
-	ProgramInterface(dictionary, board);
+	ProgramInterface();
 
 	system("pause");
 
