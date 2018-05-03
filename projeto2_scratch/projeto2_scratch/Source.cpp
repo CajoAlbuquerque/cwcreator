@@ -50,9 +50,8 @@ void CreatePuzzle()
 		cin >> num_lines >> num_columns;
 	}
 
-	board.Open(num_lines, num_columns);
-	board.DefineIndexes();
-	board.ShowBoard();
+	board.Create(num_lines, num_columns);
+	board.Show();
 }
 
 void ResumePuzzle()

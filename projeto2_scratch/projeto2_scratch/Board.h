@@ -13,15 +13,15 @@ class Board
 public:
 	Board();
 	~Board();
-	void Open(unsigned int num_lines, unsigned int num_columns);
-	void DefineIndexes();
-	void ShowBoard();
+	void Create(unsigned int num_lines, unsigned int num_columns);
+	void Show();
 
 private:
 	unsigned int lines;
 	unsigned int columns;
-	vector < vector < char > > Board_Cells;
+	vector <vector <char>> Board_Cells;
 	vector <char> indexes;
+	void DefineIndexes();
 };
 
 #endif
