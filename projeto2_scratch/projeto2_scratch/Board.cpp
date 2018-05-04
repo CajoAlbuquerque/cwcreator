@@ -70,7 +70,19 @@ void Board::Insert(const string & lcd, const string & word) //this function inse
 
 	DecodeLcd(l, c, d, lcd);
 
-
-
+	if (d)				  //writing vertically
+	{
+		for (size_t i = 0; i < word.length(); i++)
+		{
+			Board_Cells[l + i][c] = word[i];
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i < word.length(); i++)
+		{
+			Board_Cells[l][c + i] = word[i];
+		}
+	}
 
 }
