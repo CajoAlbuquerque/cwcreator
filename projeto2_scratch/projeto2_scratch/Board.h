@@ -14,6 +14,8 @@ public:
 	Board();
 	~Board();
 	void Create(unsigned int num_lines, unsigned int num_columns);
+	void Insert(string lcd, string userWord);
+	void Remove(string lcd);
 	void Show();
 
 private:
@@ -21,6 +23,7 @@ private:
 	unsigned int columns;
 	vector <vector <char>> Board_Cells;
 	vector <char> indexes;
+	void BlackCells();
 	void DefineIndexes();
 };
 

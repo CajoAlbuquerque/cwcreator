@@ -17,7 +17,7 @@ void Dictionary::ExtractWords(ifstream &dictionaryFile)
 		separateWords(line, wordList, counter);
 	}
 
-	cout << "num of wwords: " << counter << endl;
+	cout << "Number of words: " << counter << endl;
 }
 
 /*
@@ -54,7 +54,7 @@ bool Dictionary::validWord(string word) //verifies if a word is valid
 
 void Dictionary::trimWord(string &word)
 {
-	int flag = 0; //this flag identifies which case we are dealing with
+	//int flag = 0; //this flag identifies which case we are dealing with
 	size_t i = word.length() - 1; //index of the last char of the word
 
 	while (word[0] == ' ')
@@ -92,9 +92,9 @@ void Dictionary::separateWords(string line, map < string, vector <string> > &wor
 	string keyword = "";
 	vector <string> synonyms;
 
-	for (size_t i = 0; i < line.length(); i++) //searches the whole line, separating letters when it finds the end of the line or a ;
+	for (size_t i = 0; i <= line.length(); i++) //searches the whole line, separating letters when it finds the end of the line or a ;
 	{
-		if (i == line.length() - 1 || line[i] == ':' || line[i] == ',' || line[i] == '\n')
+		if (i == line.length() || line[i] == ':' || line[i] == ',' || line[i] == '\n')
 		{
 			trimWord(word); //trims the word
 

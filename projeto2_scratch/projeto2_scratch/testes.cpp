@@ -5,7 +5,7 @@ int main()
 {
 	Board myBoard;
 	unsigned int lines, columns;
-
+	
 	cout << "lines columns??"; cin >> lines >> columns;
 
 	myBoard.Create(lines, columns);

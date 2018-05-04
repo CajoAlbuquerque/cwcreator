@@ -43,7 +43,7 @@ void CreatePuzzle()
 	cout << "Board size ? (lines columns) ";
 	cin >> num_lines >> num_columns;
 
-	while (!cin.fail()) //if the input for lines and columns failed 
+	while (cin.fail()) //if the input for lines and columns failed 
 	{
 		cin.ignore(1000000, '/n');
 		cout << "Introduce a valid input for lines and columns. ";
