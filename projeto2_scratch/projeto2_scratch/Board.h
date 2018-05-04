@@ -23,9 +23,10 @@ private:
 	unsigned int columns;
 	vector <vector <char>> Board_Cells;
 	vector <char> indexes;
-	void BlackCells();
-	void DecodeLcd(unsigned int & l, unsigned int & c, unsigned int & d, const string & lcd);
 	void DefineIndexes();
+	void BlackCells();
+	bool CheckLcd(unsigned int & l, unsigned int & c, unsigned int & d, const string & lcd);
+	bool CheckSize(unsigned int l, unsigned int c, unsigned int d, const string & word);
 };
 
 #endif

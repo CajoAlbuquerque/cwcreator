@@ -21,14 +21,48 @@ void Board::DefineIndexes() //this function exists only to indicate the indexes 
 		indexes[i] = (char)((int)'A' + (i - columns - 1));
 }
 
-void Board::DecodeLcd(unsigned int & l, unsigned int & c, unsigned int & d,const string & lcd)//decodes user input lcd (line column and direction) returning l and c as indexes and d as flag (1 - Vertical; 0 - Horizontal)
-{
+bool Board::CheckLcd(unsigned int & l, unsigned int & c, unsigned int & d,const string & lcd)//decodes user input lcd (line column and direction) returning l and c as indexes and d as flag (1 - Vertical; 0 - Horizontal)
+{																						     //also verifies if the user lcd is valid
 	l = ((int)lcd[0] - (int)'A');
+	if (l >= lines)
+		return false;
+
 	c = ((int)lcd[1] - (int)'a');
-	if (lcd[2] == 'V')
+	if (c >= columns)
+		return false;
+
+	if (lcd[2] == 'V' || lcd[2] == 'v')
+	{
 		d = 1;
-	else
+		return true;
+	}
+	else if (lcd[2] == 'H' || lcd[2] == 'h')
+	{
 		d = 0;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool Board::CheckSize(unsigned int l, unsigned int c, unsigned int d, const string & word)
+{
+	unsigned int i;
+
+	if (d)
+	{
+		i = l + word.length();
+		if (i > lines)
+			return false;
+	}
+	else
+	{
+		i = c + word.length();
+		if (i > columns)
+			return false;
+	}
+
+	return true;
 }
 
 void Board::Create(unsigned int num_lines, unsigned int num_columns)
@@ -68,7 +102,17 @@ void Board::Insert(const string & lcd, const string & word) //this function inse
 {
 	unsigned int l, c, d; //respectively: line, column, direction in which the user input will be written
 
-	DecodeLcd(l, c, d, lcd);
+	if (!CheckLcd(l, c, d, lcd))
+	{
+		cerr << "Invalid LCD. Please verify it and try again." << endl;
+		return;
+	}
+
+	if (!CheckSize(l, c, d, word))
+	{
+		cerr << "Invalid size. Word is too long." << endl;
+		return;
+	}
 
 	if (d)				  //writing vertically
 	{
@@ -77,7 +121,7 @@ void Board::Insert(const string & lcd, const string & word) //this function inse
 			Board_Cells[l + i][c] = word[i];
 		}
 	}
-	else
+	else if (!d)		  //writing horizontally
 	{
 		for (size_t i = 0; i < word.length(); i++)
 		{
