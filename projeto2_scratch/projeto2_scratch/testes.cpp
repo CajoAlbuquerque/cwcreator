@@ -22,8 +22,15 @@ int main()
 
 		cout << "Insert word: "; cin >> user_word;
 
-		myBoard.Insert(user_lcd, user_word);
-		myBoard.Show();
+		if (user_word == "-")
+		{
+
+		}
+		else
+		{
+			myBoard.Insert(user_lcd, user_word);
+			myBoard.Show();
+		}
 	}
 
 	system("pause");
