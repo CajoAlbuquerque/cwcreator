@@ -45,27 +45,51 @@ bool Board::CheckLcd(unsigned int & l, unsigned int & c, unsigned int & d,const 
 		return false;
 }
 
-bool Board::CheckSize(unsigned int l, unsigned int c, unsigned int d, const string & word)
+bool Board::CheckSize(unsigned int l, unsigned int c, unsigned int d, const string & word) //checks if the word fits in the board
 {
 	unsigned int i;
 
 	if (d)
 	{
 		i = l + word.length();
-		if (i > lines)
+		if (i > lines)			//when writing horizontally, we need to check if the length of the word plus the starting position is greater then the total number of lines
 			return false;
 	}
 	else
 	{
 		i = c + word.length();
-		if (i > columns)
+		if (i > columns)		//when writing vertically, we need to check if the length of the word plus the starting position is greater then the total number of columns
 			return false;
 	}
 
 	return true;
 }
 
-void Board::Create(unsigned int num_lines, unsigned int num_columns)
+bool Board::CheckMatching(unsigned int l, unsigned int c, unsigned int d, const string & word) //checks if the user input can be matched with the words on the board (crosswords)
+{
+	if (d)				  //writing vertically
+	{
+		for (size_t i = 0; i < word.length(); i++)
+		{
+			if (Board_Cells[l + i][c] == ".")
+			{
+
+			}
+
+		}
+	}
+	else				 //writing horizontally
+	{
+		for (size_t i = 0; i < word.length(); i++)
+		{
+			Board_Cells[l][c + i] = word[i];
+		}
+	}
+
+	return true;
+}
+
+void Board::Create(unsigned int num_lines, unsigned int num_columns) //creates the board filled with dots
 {
 	lines = num_lines;
 	columns = num_columns;

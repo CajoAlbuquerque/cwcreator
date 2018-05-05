@@ -27,6 +27,7 @@ private:
 	void BlackCells();
 	bool CheckLcd(unsigned int & l, unsigned int & c, unsigned int & d, const string & lcd);
 	bool CheckSize(unsigned int l, unsigned int c, unsigned int d, const string & word);
+	bool CheckMatching(unsigned int l, unsigned int c, unsigned int d, const string & word);
 };
 
 #endif
