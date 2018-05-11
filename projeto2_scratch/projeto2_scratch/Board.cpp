@@ -21,8 +21,12 @@ void Board::DefineIndexes() //this function exists only to indicate the indexes 
 		indexes[i] = (char)((int)'A' + (i - columns - 1));
 }
 
-bool Board::CheckLcd(unsigned int & l, unsigned int & c, unsigned int & d,const string & lcd)//decodes user input lcd (line column and direction) returning l and c as indexes and d as flag (1 - Vertical; 0 - Horizontal)
-{																						     //also verifies if the user lcd is valid
+
+bool Board::CheckLCD(const string & lcd)//decodes user input lcd (line column and direction) returning l and c as indexes and d as flag (1 - Vertical; 0 - Horizontal)
+{	//also verifies if the user lcd is valid
+
+	unsigned int l, c;
+
 	l = ((int)lcd[0] - (int)'A');
 	if (l >= lines)
 		return false;
@@ -31,34 +35,26 @@ bool Board::CheckLcd(unsigned int & l, unsigned int & c, unsigned int & d,const 
 	if (c >= columns)
 		return false;
 
-	if (lcd[2] == 'V' || lcd[2] == 'v')
-	{
-		d = 1;
+	if (lcd[2] == 'V' || lcd[2] == 'v' || lcd[2] == 'H' || lcd[2] == 'h')
 		return true;
-	}
-	else if (lcd[2] == 'H' || lcd[2] == 'h')
-	{
-		d = 0;
-		return true;
-	}
-	else
-		return false;
+
+	return false;
 }
 
-bool Board::CheckSize(unsigned int l, unsigned int c, unsigned int d, const string & word) //checks if the word fits in the board
+bool Board::CheckSize(unsigned int l, unsigned int c, char d, const string & word) //checks if the word fits in the board
 {
-	unsigned int i;
+	size_t i;
 
-	if (d)
+	if (d == 'V' || d == 'v')
 	{
 		i = l + word.length();
-		if (i > lines)			//when writing horizontally, we need to check if the length of the word plus the starting position is greater then the total number of lines
+		if (i > lines)			//when writing vertically, we need to check if the length of the word plus the starting position is greater then the total number of columns
 			return false;
 	}
 	else
 	{
 		i = c + word.length();
-		if (i > columns)		//when writing vertically, we need to check if the length of the word plus the starting position is greater then the total number of columns
+		if (i > columns)		//when writing horizontally, we need to check if the length of the word plus the starting position is greater then the total number of lines
 			return false;
 	}
 
@@ -67,26 +63,79 @@ bool Board::CheckSize(unsigned int l, unsigned int c, unsigned int d, const stri
 
 bool Board::CheckMatching(unsigned int l, unsigned int c, unsigned int d, const string & word) //checks if the user input can be matched with the words on the board (crosswords)
 {
-	if (d)				  //writing vertically
+	size_t i;
+
+	if (d == 'V' || d == 'v')				  //writing vertically
 	{
-		for (size_t i = 0; i < word.length(); i++)
+		if (l != 0)
 		{
-			if (Board_Cells[l + i][c] == ".")
-			{
-
-			}
-
+			if (isalpha(Board_Cells[l - 1][c]))
+				return false;
+			else
+				Board_Cells[l - 1][c] = '#'; //
 		}
+
+
+		for (i = 0; i < word.length(); i++)
+		{
+			if (Board_Cells[l + i][c] == '#')
+			{
+				return false;
+			}
+			else if (isalpha(Board_Cells[l + i][c]))
+			{
+				if (Board_Cells[l + i][c] != word[i])
+					return false;
+			}
+		}
+
+		if ((l + i) < lines)
+		{
+			if (isalpha(Board_Cells[l + i][c]))
+				return false;
+			else
+				Board_Cells[l + i][c] = '#'; //
+		}
+
 	}
 	else				 //writing horizontally
 	{
-		for (size_t i = 0; i < word.length(); i++)
+		if (c != 0)
 		{
-			Board_Cells[l][c + i] = word[i];
+			if (isalpha(Board_Cells[l][c - 1]))
+				return false;
+			else
+				Board_Cells[l][c - 1] = '#'; //
+		}
+
+		for (i = 0; i < word.length(); i++)
+		{
+			if (Board_Cells[l][c + i] == '#')
+			{
+				return false;
+			}
+			else if (isalpha(Board_Cells[l][c + i]))
+			{
+				if (Board_Cells[l][c + i] != word[i])
+					return false;
+			}
+		}
+
+		if ((c + i) < columns)
+		{
+			if (isalpha(Board_Cells[l][c + i]))
+				return false;
+			else
+				Board_Cells[l][c + i] = '#'; 
 		}
 	}
 
 	return true;
+}
+
+void Board::BlackCells()
+{
+
 }
 
 void Board::Create(unsigned int num_lines, unsigned int num_columns) //creates the board filled with dots
@@ -124,13 +173,9 @@ void Board::Show() //this function displays the board to the user
 
 void Board::Insert(const string & lcd, const string & word) //this function inserts a word into the board
 {
-	unsigned int l, c, d; //respectively: line, column, direction in which the user input will be written
-
-	if (!CheckLcd(l, c, d, lcd))
-	{
-		cerr << "Invalid LCD. Please verify it and try again." << endl;
-		return;
-	}
+	unsigned int l = ((int)lcd[0] - (int)'A');
+	unsigned int c = ((int)lcd[1] - (int)'a');
+	char d = lcd[2];
 
 	if (!CheckSize(l, c, d, word))
 	{
@@ -138,14 +183,20 @@ void Board::Insert(const string & lcd, const string & word) //this function inse
 		return;
 	}
 
-	if (d)				  //writing vertically
+	if (!CheckMatching(l, c, d, word))
+	{
+		cerr << "Invalid match. Word doesn't match the existing letters." << endl;
+		return;
+	}
+
+	if (d == 'V' || d == 'v')				  //writing vertically
 	{
 		for (size_t i = 0; i < word.length(); i++)
 		{
 			Board_Cells[l + i][c] = word[i];
 		}
 	}
-	else if (!d)		  //writing horizontally
+	else //writing horizontally
 	{
 		for (size_t i = 0; i < word.length(); i++)
 		{
@@ -153,4 +204,45 @@ void Board::Insert(const string & lcd, const string & word) //this function inse
 		}
 	}
 
+	vector <string> pair_lcd_word(2);
+
+	pair_lcd_word[0] = lcd;
+	pair_lcd_word[1] = word;
+
+	Words_on_Board.push_back(pair_lcd_word);
+}
+
+void Board::SaveBoard(ofstream &savingFile, string dictionaryFileName)
+{
+	savingFile << dictionaryFileName << endl << endl;
+
+	for (size_t i = 0; i < lines; i++)
+	{
+		for (size_t k = 0; k < columns; k++)
+			savingFile << setw(2) << Board_Cells[i][k];
+
+		savingFile << endl;
+	}
+
+	savingFile << endl << endl;
+
+	for (size_t i = 0; i < Words_on_Board.size(); i++)
+	{
+		savingFile << Words_on_Board[i][0] << " " << Words_on_Board[i][1] << endl;
+	}
+}
+
+void Board::ResumeBoard(ifstream &boardFile)
+{
+	string line;
+	unsigned int counter = 0;
+
+	while (getline(boardFile, line))
+	{
+		counter++;
+		if (isupper(line[0]) && islower(line[1]) && line[3] == ' ')
+		{
+
+		}
+	}
 }

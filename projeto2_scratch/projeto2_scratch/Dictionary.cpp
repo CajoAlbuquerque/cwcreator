@@ -14,25 +14,18 @@ void Dictionary::ExtractWords(ifstream &dictionaryFile)
 
 	while (getline(dictionaryFile, line))//verify every line until the end of file
 	{
-		separateWords(line, wordList, counter);
+		separateWords(line, wordList);
 	}
-
-	cout << "Number of words: " << counter << endl;
 }
 
-/*
 bool Dictionary::WordExists(string word)
 {
 	if (wordList.find(word) != wordList.end())
-	{
-		return true;
-	}
-	else if ()
 		return true;
 	else return false;
 }
 
-vector <string> Dictionary::MatchingWords()
+/*vector <string> Dictionary::MatchingWords()
 {
 
 }
@@ -85,25 +78,26 @@ void Dictionary::EverythingToUpper(string &word) // this function simply puts al
 	}
 }
 
-void Dictionary::separateWords(string line, map < string, vector <string> > &wordList, unsigned int &counter)
+void Dictionary::separateWords(string line, map < string, vector <string> > &wordList)
 {
 	bool first_word = 1;
 	string word = "";
 	string keyword = "";
 	vector <string> synonyms;
 
-	for (size_t i = 0; i <= line.length(); i++) //searches the whole line, separating letters when it finds the end of the line or a ;
+	for (size_t i = 0; i < line.length(); i++) //searches the whole line, separating letters when it finds the end of the line or a ;
 	{
-		if (i == line.length() || line[i] == ':' || line[i] == ',' || line[i] == '\n')
+		if (i == line.length() - 1 || line[i] == ':' || line[i] == ',' || line[i] == '\n')
 		{
+			if (isalpha(line[i]))
+				word = word + line[i];
+
 			trimWord(word); //trims the word
 
-			if (validWord(word)) //if it is a valid word
+			if (word != "" && validWord(word)) //if it is a valid word
 			{
 				EverythingToUpper(word);
 
-				counter++;
-				
 				if (first_word)
 				{
 					keyword = word;
@@ -118,5 +112,6 @@ void Dictionary::separateWords(string line, map < string, vector <string> > &wor
 			word = word + line[i]; //accumulates chars to build a word
 	}
 
-	wordList.insert(pair < string, vector <string> > (keyword, synonyms));
+	if (synonyms.size() != 0) //only had a word and its synonyms to the list if the word has synonyms
+		wordList.insert(pair < string, vector <string> >(keyword, synonyms));
 }

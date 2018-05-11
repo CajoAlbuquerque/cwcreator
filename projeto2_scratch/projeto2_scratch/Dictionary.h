@@ -19,15 +19,14 @@ public:
 	void ExtractWords(ifstream &dictionaryFile);
 	bool WordExists(string word);
 	vector <string> MatchingWords();
+	void EverythingToUpper(string &word);
 
 private:
-	unsigned int counter;
 	map < string, vector <string> > wordList;
 
-	void separateWords(string line, map < string, vector <string> > &wordList, unsigned int &counter);
+	void separateWords(string line, map < string, vector <string> > &wordList);
 	bool validWord(string word);
 	void trimWord(string &word);
-	void EverythingToUpper(string &word);
 };
 
 #endif
