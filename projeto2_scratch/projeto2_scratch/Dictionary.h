@@ -17,16 +17,17 @@ public:
 	Dictionary();
 	~Dictionary();
 	void ExtractWords(ifstream &dictionaryFile);
-	bool WordExists(string word);
-	vector <string> MatchingWords();
+	bool WordExists(const string & word);
+	vector <string> MatchingWords(const string & word);
 	void EverythingToUpper(string &word);
 
 private:
-	map < string, vector <string> > wordList;
+	map < string, vector <string> > wordList; //map containing the pairs WORD-SYNONYMS
 
-	void separateWords(string line, map < string, vector <string> > &wordList);
+	void separateWords(string & line, map < string, vector <string> > &wordList);
 	bool validWord(string word);
 	void trimWord(string &word);
+	bool wildcardMatch(const char *str, const char *strWild);
 };
 
 #endif

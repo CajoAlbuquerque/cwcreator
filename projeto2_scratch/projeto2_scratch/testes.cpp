@@ -24,7 +24,8 @@ int main()
 
 		if (user_word == "-")
 		{
-
+			myBoard.Remove(user_lcd);
+			myBoard.Show();
 		}
 		else
 		{
